@@ -9,20 +9,16 @@ using NAudio.Wave;
 
 namespace Hangman
 {
-	class Sound
+	static class Sound
 	{
 		private static Dictionary<string, byte[]> MusicDictionary = new Dictionary<string, byte[]>();
 		private static Dictionary<string, byte[]> SoundDictionary = new Dictionary<string, byte[]>();
-        WaveOut MusicWaveOutput;
-        MemoryStream MusicMemoryStream;
-        LoopStream MusicMp3Looper;
-        Mp3FileReader MusicMp3FileReader;
+        private static WaveOut MusicWaveOutput;
+        private static MemoryStream MusicMemoryStream;
+        private static LoopStream MusicMp3Looper = null;
+        private static Mp3FileReader MusicMp3FileReader;
 
-        public Sound()
-		{
-            MusicMp3Looper = null;
-		}
-		public void SoundExecutePlayMusic(string MusicName)
+		public static void SoundExecutePlayMusic(string MusicName)
 		{
 			if (MusicMp3Looper != null)
 			{
@@ -38,7 +34,7 @@ namespace Hangman
             MusicWaveOutput.Init(MusicMp3Looper);
             MusicWaveOutput.Play();
 		}
-        public void SoundExecuteStopMusic()
+        public static void SoundExecuteStopMusic()
         {
             if (MusicMp3Looper != null)
             {
@@ -48,7 +44,7 @@ namespace Hangman
                 MusicMemoryStream.Dispose();
             }
         }
-		public void SoundExecutePlaySound(string SoundName)
+		public static void SoundExecutePlaySound(string SoundName)
 		{
 			MemoryStream Mp3Stream = new MemoryStream(SoundDictionary[SoundName]);
 			Mp3FileReader Mp3Reader = new Mp3FileReader(Mp3Stream);
