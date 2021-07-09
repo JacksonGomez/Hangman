@@ -7,46 +7,30 @@ using System.Text;
 
 namespace Hangman
 {
-	static class Program
+	static partial class Program
 	{
 		static string LettersReplace = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		static string LettersGuessed = "";
 		static string WordGuess = "";
-		static int GuessesRemaining = (5);
+		static int GuessesRemaining = (0);
 		static bool GameContinue = true;
 		static Random RandomObject = new Random();
 
-		static readonly string[] AllWordsFood = Properties.Resources.food.Split("\n");
-		static readonly string[] AllWordsOccupations = Properties.Resources.Occupations.Split("\n");
-		static readonly string[] AllWordsMusic = Properties.Resources.music_genres.Split("\n");
-		static readonly string[] AllWordsCelebrities = Properties.Resources.Celebrities.Split("\n");
-		static readonly string[] AllWordsSciFiLoad = Properties.Resources.scifi.Split("\n");
-		static string[] AllWordsSciFi;
+		static int CategoryIndex;
+		static List<string> CategoryNames = new List<string> { "Food & Drink", "Occupations", "Music", "Celebrities", "SciFi" };
+		static readonly string[][] CategoryMaster =
+		{
+			LoadCategoryWords(Properties.Resources.category_food),
+			LoadCategoryWords(Properties.Resources.category_occupations),
+			LoadCategoryWords(Properties.Resources.category_music),
+			LoadCategoryWords(Properties.Resources.category_celebrities),
+			LoadCategoryWords(Properties.Resources.category_scifi),
+		};
 
-
-
-		const string TitleString = @"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-   @@     @@                                                                    
-   @@     @@                                                                    
-   @@     @@    @@@@     @@@@@@      @@@@@  @@@@@@  @@@@     @@@@      @@@@@    
-   @@@@@@@@@        @@   @@    @@  @@   @@  @@    @@    @@       @@    @@   @@  
-   @@     @@    @@@@@@   @@    @@  @@   @@  @@    @@    @@   @@@@@@    @@   @@  
-   @@     @@  @@    @@   @@    @@  @@   @@  @@    @@    @@  @@   @@    @@   @@  
-   @@     @@  @@    @@   @@    @@  @@   @@  @@    @@    @@  @@   @@    @@   @@  
-   @@     @@    @@@@ @@@ @@    @@    @@@@@  @@    @@    @@   @@@@  @@  @@   @@  
-                                        @@                                      
-                                   @@   @@                                      
-                                     @@@@                                                                                                                                                                                
-		";
-
+		
+		
 		static void Main()
         {
-			AllWordsSciFi = new string[AllWordsSciFiLoad.Length];
-			for (int i = 0; i < AllWordsSciFiLoad.Length; i++)
-			{
-				AllWordsSciFi[i] = AllWordsSciFiLoad[i].Trim();
-			}
-
 			while (GameContinue)
             {
 				GameStart();
@@ -74,18 +58,15 @@ namespace Hangman
 			LettersGuessed = "";
 			WordGuess = "";
 			GuessesRemaining = (5);
+			GetCategoryIndex();
+			GetRandomWord();
 			string Username = Environment.GetEnvironmentVariable("USERNAME");
 			ClearConsole();
-
-			Random randomCat = new Random();
-			List<string> Category = new List<string> { /*"Food & Drink", "Occupations",*/ "Science Fiction", /*"Music", "Celebrities"*/ };
-			int CatIndex = randomCat.Next(Category.Count);
-			GamePickWord(Category, CatIndex);
 			
 			while (GuessesRemaining > 0)
 			{
 				ClearConsole();
-				WriteLine("Category: {0}", Category[CatIndex]);
+				WriteLine("Category: {0}", GetCategoryName());
 				WriteLine(WordReturnObscured());
 				string InputLetter = GameTakeInput();
 
@@ -199,28 +180,61 @@ namespace Hangman
             }
         }
 		
-		static void GamePickWord(List<string> Category, int Index)
+		static void GetRandomWord()
         {
-			switch (Category[Index])
-			{
-				case "Food & Drink":
-					WordGuess = AllWordsFood[RandomObject.Next(AllWordsFood.Length)];
-					break;
-				case "Occupations":
-					WordGuess = AllWordsOccupations[RandomObject.Next(AllWordsOccupations.Length)];
-					break;
-				case "Science Fiction":
-					WordGuess = AllWordsSciFi[RandomObject.Next(AllWordsSciFi.Length)];
-					break;
-				case "Music":
-					WordGuess = AllWordsMusic[RandomObject.Next(AllWordsMusic.Length)];
-					break;
-				case "Celebrities":
-					WordGuess = AllWordsCelebrities[RandomObject.Next(AllWordsCelebrities.Length)];
-					break;
-			}
+			string[] WordArray = CategoryMaster[CategoryIndex];
+			int WordIndex = RandomObject.Next(WordArray.Length);
+			WordGuess = WordArray[WordIndex];
 
 			WriteLine(WordGuess);
+		}
+
+		static void GetCategoryIndex()
+		{
+			ClearConsole();
+			WriteLine("Please select one of the below categories:");
+			for (int i = 0; i < CategoryNames.Count; i++)
+			{
+				WriteLine("[{0}] - {1}", i + 1, CategoryNames[i]);
+			}
+
+			while (true)
+			{
+				string CategoryInput = ReadLine();
+				try
+				{
+					CategoryIndex = Int32.Parse(CategoryInput) - 1;
+					if ((CategoryIndex < 0) || (CategoryIndex >= CategoryNames.Count))
+					{
+						WriteLine("Invalid index. Try again.");
+					}
+					else
+					{
+						return;
+					}
+				}
+				catch (Exception)
+				{
+					WriteLine("Invalid choice. Try again.");
+				}
+			}
+		}
+
+		static string[] LoadCategoryWords(string Input)
+		{
+			string[] LoadInput = Input.Split("\n");
+			string[] LoadReturn = new string[LoadInput.Length];
+			for (int i = 0; i < LoadInput.Length; i++)
+			{
+				LoadReturn[i] = LoadInput[i].Trim();
+			}
+
+			return LoadReturn;
+		}
+
+		static string GetCategoryName()
+		{
+			return CategoryNames[CategoryIndex];
 		}
 	}
 }

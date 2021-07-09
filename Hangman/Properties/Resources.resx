@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Celebrities" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="category_celebrities" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Celebrities.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="food" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\food.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="category_food" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\food.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
-  <data name="music_genres" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="category_music" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\music genres.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Occupations" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Occupations.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="category_occupations" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Occupations.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
-  <data name="scifi" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\scifi.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="category_scifi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\scifi.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
 </root>

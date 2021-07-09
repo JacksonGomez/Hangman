@@ -98,9 +98,9 @@ namespace Hangman.Properties {
         ///Andy Samberg
         ///Andy S [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Celebrities {
+        internal static string category_celebrities {
             get {
-                return ResourceManager.GetString("Celebrities", resourceCulture);
+                return ResourceManager.GetString("category_celebrities", resourceCulture);
             }
         }
         
@@ -172,9 +172,9 @@ namespace Hangman.Properties {
         ///bran
         ///bran [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string food {
+        internal static string category_food {
             get {
-                return ResourceManager.GetString("food", resourceCulture);
+                return ResourceManager.GetString("category_food", resourceCulture);
             }
         }
         
@@ -222,9 +222,9 @@ namespace Hangman.Properties {
         ///ashiq
         ///asian american j [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string music_genres {
+        internal static string category_music {
             get {
-                return ResourceManager.GetString("music_genres", resourceCulture);
+                return ResourceManager.GetString("category_music", resourceCulture);
             }
         }
         
@@ -252,9 +252,9 @@ namespace Hangman.Properties {
         ///Agricultural Worker
         ///Agricultural &amp; Food Science Techni [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Occupations {
+        internal static string category_occupations {
             get {
-                return ResourceManager.GetString("Occupations", resourceCulture);
+                return ResourceManager.GetString("category_occupations", resourceCulture);
             }
         }
         
@@ -288,9 +288,9 @@ namespace Hangman.Properties {
         ///Alien Intruder  
         ///A [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string scifi {
+        internal static string category_scifi {
             get {
-                return ResourceManager.GetString("scifi", resourceCulture);
+                return ResourceManager.GetString("category_scifi", resourceCulture);
             }
         }
     }
