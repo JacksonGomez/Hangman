@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using static System.Console;
 using System.Threading;
 using System.Text;
+using System.IO;
 
 namespace Hangman
 {
@@ -14,10 +15,8 @@ namespace Hangman
 		static string WordGuess = "";
 		static string LastGuess = "";
 		static int GuessesRemaining = (0);
-		static int StreakIncrease;
-		static int StreakLost;
-		static int MaxStreak;
-		static int CurrentStreak;
+		static int StreakMaximum = LoadStreakMaximum();
+		static int StreakCurrent = 0;
 		static bool GameContinue = true;
 		static Random RandomObject = new Random();
 
@@ -39,6 +38,7 @@ namespace Hangman
             {
 				GameStart();
             }
+			Console.WriteLine("thanks for playing, your highest streak was {0}.", StreakMaximum);
         }
 
 		static bool CheckWin()
@@ -63,8 +63,6 @@ namespace Hangman
 			WordGuess = "";
 			LastGuess = "";
 			GuessesRemaining = (5);
-			StreakIncrease++;
-			StreakLost++;
 			GetCategoryIndex();
 			GetRandomWord();
 			string Username = Environment.GetEnvironmentVariable("USERNAME");
@@ -78,11 +76,15 @@ namespace Hangman
 				{
 					if (GetStringIsInWord(LastGuess))
 					{
+						Console.ForegroundColor= ConsoleColor.Green;
 						WriteLine("Good guess! There was a {0}.", LastGuess);
+						Console.ForegroundColor = ConsoleColor.White;
 					}
 					else
 					{
+						Console.ForegroundColor = ConsoleColor.Red;
 						WriteLine("There were no {0}'s.", LastGuess);
+						Console.ForegroundColor = ConsoleColor.White;
 					}
 				}
 				string InputLetter = GameTakeInput();
@@ -107,17 +109,24 @@ namespace Hangman
 			ClearConsole();
 			WriteLine(WordReturnObscured());
 			WriteLine("good job dude.");
-			Streak();
-			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");			
+			StreakCurrent++;
+			if (StreakMaximum < StreakCurrent)
+            {
+				StreakMaximum = StreakCurrent;
+            }
+			SaveStreakMaximum();
+			ShowStreak();
+			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");
 		}
 
 		static void GameLose()
         {
-			StreakIncrease = 0;
 			ClearConsole();
-
-			StreakLose();
-        }
+			WriteLine("bad job dude, the word was {0}.", WordGuess);
+			StreakCurrent = 0;
+			ShowStreak();
+			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");
+		}
 
 		static string GameTakeInput()
         {
@@ -181,6 +190,7 @@ namespace Hangman
 
 		static void ClearConsole()
         {
+			Console.ForegroundColor = ConsoleColor.White;
 			Clear();
 			ConsoleLinebreak();
 			WriteLine(TitleString);
@@ -270,25 +280,39 @@ namespace Hangman
 			return (WordGuess.ToUpper().IndexOf(Input.ToUpper()) != -1);
 		}
 
-		static void Streak()
+		static void ShowStreak()
 		{
-			WriteLine("Streak: {0}", StreakIncrease);
+			WriteLine("current streak: {0}", StreakCurrent);
+			WriteLine("maximum streak: {0}", StreakMaximum);
 		}
 
-		static void StreakLose()
-		{
-			if (StreakLost <= 1)
+		static void SaveStreakMaximum()
+        {
+			string FileDirectory = (Environment.GetEnvironmentVariable("APPDATA") + "\\GomezHangman\\");
+			if (!Directory.Exists(FileDirectory))
+            {
+				Directory.CreateDirectory(FileDirectory);
+            }
+			using (StreamWriter OutputFile = new StreamWriter(Path.Combine(FileDirectory, "HIGHEST_STREAK.txt"), true))
 			{
-				WriteLine("bad job dude. the word was {0}.", WordGuess);
-				StreakLost = 0;
+				OutputFile.WriteLine(StreakMaximum.ToString());
 			}
-			else if (StreakLost >= 1)
-			{
-				WriteLine("bad job dude. the word was {0}.", WordGuess);
-				WriteLine("streak lost");
-				StreakLost = 0;
+		}
+
+		static int LoadStreakMaximum()
+        {
+			string FilePath = (Environment.GetEnvironmentVariable("APPDATA") + "\\GomezHangman\\HIGHEST_STREAK.txt");
+			int ReturnValue = 0;
+			try
+            {
+				string InputString = File.ReadAllText(FilePath);
+				ReturnValue = Int32.Parse(InputString);
 			}
-			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");
+			catch
+            {
+				ReturnValue = 0;
+            }
+            return ReturnValue;
 		}
 	}
 }
