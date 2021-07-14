@@ -61,6 +61,16 @@ namespace Hangman.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] bgm_main {
+            get {
+                object obj = ResourceManager.GetObject("bgm_main", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Aaron Taylor-Johnson
         ///Abigail Breslin
         ///Adam Sandler

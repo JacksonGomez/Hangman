@@ -12,7 +12,12 @@ namespace Hangman
 		static string LettersReplace = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		static string LettersGuessed = "";
 		static string WordGuess = "";
+		static string LastGuess = "";
 		static int GuessesRemaining = (0);
+		static int StreakIncrease;
+		static int StreakLost;
+		static int MaxStreak;
+		static int CurrentStreak;
 		static bool GameContinue = true;
 		static Random RandomObject = new Random();
 
@@ -26,11 +31,10 @@ namespace Hangman
 			LoadCategoryWords(Properties.Resources.category_celebrities),
 			LoadCategoryWords(Properties.Resources.category_scifi),
 		};
-
-		
-		
+	
 		static void Main()
         {
+			Sound.SoundExecutePlayMusic();
 			while (GameContinue)
             {
 				GameStart();
@@ -52,22 +56,35 @@ namespace Hangman
             }
 			return true;
         }
-
+		
 		static void GameStart()
         {
 			LettersGuessed = "";
 			WordGuess = "";
+			LastGuess = "";
 			GuessesRemaining = (5);
+			StreakIncrease++;
+			StreakLost++;
 			GetCategoryIndex();
 			GetRandomWord();
 			string Username = Environment.GetEnvironmentVariable("USERNAME");
 			ClearConsole();
-			
 			while (GuessesRemaining > 0)
 			{
 				ClearConsole();
 				WriteLine("Category: {0}", GetCategoryName());
 				WriteLine(WordReturnObscured());
+				if (LastGuess != "")
+				{
+					if (GetStringIsInWord(LastGuess))
+					{
+						WriteLine("Good guess! There was a {0}.", LastGuess);
+					}
+					else
+					{
+						WriteLine("There were no {0}'s.", LastGuess);
+					}
+				}
 				string InputLetter = GameTakeInput();
 
 				LettersGuessed += InputLetter;
@@ -90,19 +107,22 @@ namespace Hangman
 			ClearConsole();
 			WriteLine(WordReturnObscured());
 			WriteLine("good job dude.");
-			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");
+			Streak();
+			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");			
 		}
 
 		static void GameLose()
         {
+			StreakIncrease = 0;
 			ClearConsole();
-			WriteLine("bad job dude. the word was {0}.", WordGuess);
-			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");
+
+			StreakLose();
         }
 
 		static string GameTakeInput()
         {
-			while (true)
+			string ReturnValue = "";
+			while (ReturnValue == "")
             {
 				WriteLine("Guess a letter. You have {0} guesses remaining.", GuessesRemaining, LettersGuessed);
 				if (LettersGuessed.Length > 0)
@@ -110,19 +130,22 @@ namespace Hangman
 					WriteLine("You have guessed the following letters so far: {0}", LettersGuessed);
                 }
 				string CheckInput = ReadLine().ToUpper();
+				
 				if (CheckInput.Length == 1)
                 {
+					string CharacterString = char.ToString(CheckInput[0]);
 					if (LettersGuessed.Contains(CheckInput[0]))
                     {
 						WriteLine("You have already guessed that letter.");
                     }
 					else
                     {
-						if (!WordGuess.ToUpper().Contains(CheckInput[0]))
-                        {
+						if (!GetStringIsInWord(CharacterString))
+						{
 							GuessesRemaining--;
-                        }
-						return CheckInput;
+						}
+						LastGuess = CharacterString;
+						ReturnValue = CharacterString;
 					}
                 }
 				else
@@ -130,6 +153,9 @@ namespace Hangman
 					WriteLine("Invalid input.");
                 }
             }
+
+			ClearConsole();
+			return ReturnValue;
         }
 
 		static string WordReturnObscured()
@@ -156,7 +182,9 @@ namespace Hangman
 		static void ClearConsole()
         {
 			Clear();
+			ConsoleLinebreak();
 			WriteLine(TitleString);
+			ConsoleLinebreak();
 			WriteLine("");
 		}
 
@@ -235,6 +263,32 @@ namespace Hangman
 		static string GetCategoryName()
 		{
 			return CategoryNames[CategoryIndex];
+		}
+
+		static bool GetStringIsInWord(string Input)
+		{
+			return (WordGuess.ToUpper().IndexOf(Input.ToUpper()) != -1);
+		}
+
+		static void Streak()
+		{
+			WriteLine("Streak: {0}", StreakIncrease);
+		}
+
+		static void StreakLose()
+		{
+			if (StreakLost <= 1)
+			{
+				WriteLine("bad job dude. the word was {0}.", WordGuess);
+				StreakLost = 0;
+			}
+			else if (StreakLost >= 1)
+			{
+				WriteLine("bad job dude. the word was {0}.", WordGuess);
+				WriteLine("streak lost");
+				StreakLost = 0;
+			}
+			GameContinue = GetConfirmation("Do you want to play again? [Y/N]");
 		}
 	}
 }

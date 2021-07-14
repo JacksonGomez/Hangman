@@ -18,7 +18,7 @@ namespace Hangman
         private static LoopStream MusicMp3Looper = null;
         private static Mp3FileReader MusicMp3FileReader;
 
-		public static void SoundExecutePlayMusic(string MusicName)
+		public static void SoundExecutePlayMusic()
 		{
 			if (MusicMp3Looper != null)
 			{
@@ -27,7 +27,7 @@ namespace Hangman
                 MusicWaveOutput.Dispose();
                 MusicMemoryStream.Dispose();
             }
-            MusicMemoryStream = new MemoryStream(MusicDictionary[MusicName]);
+            MusicMemoryStream = new MemoryStream(Properties.Resources.bgm_main);
             MusicMp3FileReader = new Mp3FileReader(MusicMemoryStream);
             MusicMp3Looper = new LoopStream(MusicMp3FileReader);
             MusicWaveOutput = new WaveOut();
